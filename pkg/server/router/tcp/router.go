@@ -133,7 +133,9 @@ func (r *Router) ServeTCP(conn tcp.WriteCloser) {
 		return
 	}
 
-	// Remove read/write deadline and delegate this to underlying TCP server (for now only handled by HTTP Server)
+	// The deadline was set to avoid blocking on the initial read of the ClientHello,
+	// but now that we have it, we can remove it,
+	// and delegate this to underlying TCP server (for now only handled by HTTP Server).
 	if err := conn.SetDeadline(time.Time{}); err != nil {
 		log.Error().Err(err).Msg("Error while setting deadline")
 	}
